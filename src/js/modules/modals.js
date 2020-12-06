@@ -1,41 +1,68 @@
-const modals = () => {
-    function bindModal(triggerSelector, modalSelector, closeSelector){
+const modals = (prop = '', modalState = {}) => {
+    function bindModal(triggerSelector, modalSelector, closeSelector, closeClickOwerlay = true ){
         const trigger = document.querySelectorAll(triggerSelector),
         modal = document.querySelector(modalSelector),
-        close = document.querySelector(closeSelector)
-
+        close = document.querySelector(closeSelector),
+        windows = document.querySelectorAll('[data-modal]');
+        
+        
         trigger.forEach( i => {
+            if ( modalState.form && modalState.width && modalState.height && !modalState.profile && !modalState.type){
+                i.removeAttribute('disabled');
+            }
+            if ( modalState.form && modalState.width && modalState.height &&  !i.getAttribute('disabled')){
+                document.querySelector('.popup_calc_profile_button').setAttribute('disabled', true);
+            }
+            if (modalState.profile && modalState.type ){
+                i.removeAttribute('disabled');
+            }
             i.addEventListener('click', (e)=> {
+                
                 if (e.target){
-                    e.preventDefault()
+                    e.preventDefault();
                 }
-                modal.style.display = 'block'
-                document.body.classList.add('modal-open')
+                windows.forEach( item => {
+                    item.style.display = 'none';
+                });
+                modal.style.display = 'block';
+                document.body.classList.add('modal-open');
                 /* document.body.style.overflow = 'hidden' */
-            })
-        })
+            });
+            
+        });
         close.addEventListener('click', ()=> {
-            modal.style.display = 'none'
-            document.body.classList.remove('modal-open')
+            windows.forEach( item => {
+                item.style.display = 'none';
+            });
+            modal.style.display = 'none';
+            document.body.classList.remove('modal-open');
             /* document.body.style.overflow = '' */
-        })
+        });
         modal.addEventListener('click', (e) => {
-            if (e.target === modal){
-                modal.style.display = 'none'
-                document.body.classList.remove('modal-open')
+            if (e.target === modal && closeClickOwerlay){
+                windows.forEach( item => {
+                    item.style.display = 'none';
+                });
+                modal.style.display = 'none';
+                document.body.classList.remove('modal-open');
                 /* document.body.style.overflow = '' */
             }
-        })
+        });
     }
+    
     function showModalBytime(selector, time){
         setTimeout(()=>{
-            document.querySelector(selector).style.display = 'block'
-            document.body.classList.add('modal-open')
-        }, time)
-    }
+            document.querySelector(selector).style.display = 'block';
+            document.body.classList.add('modal-open');
+        }, time);
+    }//
 
-    bindModal('.popup_engineer_btn', '.popup_engineer', '.popup_engineer .popup_close' )
-    bindModal('.phone_link', '.popup', '.popup .popup_close' )
-    showModalBytime('.popup', 60000)
-}
-export default modals
+    bindModal('.popup_engineer_btn', '.popup_engineer', '.popup_engineer .popup_close' );
+    bindModal('.phone_link', '.popup', '.popup .popup_close' );
+    bindModal('.popup_calc_btn', '.popup_calc', '.popup_calc_close');
+    bindModal('.popup_calc_button', '.popup_calc_profile', '.popup_calc_profile_close', false);
+    bindModal('.popup_calc_profile_button', '.popup_calc_end', '.popup_calc_end_close', false);
+
+    /* showModalBytime('.popup', 60000); */
+};
+export default modals;
