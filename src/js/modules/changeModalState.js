@@ -7,7 +7,7 @@ const changeModalState = (state) => {
         windowHeight = document.querySelectorAll('#height'),
         windowType = document.querySelectorAll('#view_type'),
         windowProfile = document.querySelectorAll('.checkbox'),
-        btn = document.querySelectorAll('.glazing_price_btn');
+        btn = document.querySelectorAll('#btn-end');
         
     checkNumInput('#width');
     checkNumInput('#height');
@@ -15,7 +15,6 @@ const changeModalState = (state) => {
     function bindActionToElem(event, elem, prop ){
         elem.forEach((item, i) => {
             item.addEventListener(event, () => {
-                
                 switch (item.nodeName) {
                     case 'SPAN':
                         state[prop] = i;
@@ -37,7 +36,8 @@ const changeModalState = (state) => {
                         state[prop] = item.value;
                         break;
                 }
-                modals(prop, state);
+                
+                modals(state);
             });
         });
         
